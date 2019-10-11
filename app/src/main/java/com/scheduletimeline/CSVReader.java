@@ -4,6 +4,9 @@ import android.content.res.Resources;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -16,9 +19,32 @@ import java.util.List;
 
 public class CSVReader {
 
-    public Schedule getSchedule(Resources resources) {
-        InputStream scheduleInputStream = resources.openRawResource(R.raw.schedule);
-        BufferedReader csvReader = new BufferedReader(new InputStreamReader(scheduleInputStream));
+    public Schedule getSchedule(Resources resources, File filesDir) {
+        String path = filesDir.getAbsolutePath();
+        File file = new File(path + "/schedule.csv");
+
+        InputStream scheduleInputStream = null;
+        FileReader fileReader = null;
+
+        BufferedReader csvReader = null;
+
+        //Upload file using device file explorer to /data/data/com.example.myapplication/files/schedule.csv
+        //https://stackoverflow.com/questions/13006315/how-to-access-data-data-folder-in-android-device
+        //If there is a file to read, use that, otherwise use the schedule from /res/raw
+        if (file.exists()) {
+            try {
+                fileReader = new FileReader(file);
+                csvReader = new BufferedReader(fileReader);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException("file not found");
+            }
+
+        } else {
+            scheduleInputStream = resources.openRawResource(R.raw.schedule);
+            csvReader = new BufferedReader(new InputStreamReader(scheduleInputStream));
+        }
+
+
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MMM dd kk:mm yyyy").withZone(ZoneId.systemDefault());
         ;
         Instant minStartTime = null;
@@ -45,17 +71,15 @@ public class CSVReader {
                 if (existingEvents != null) {
                     String eventStartDateTimeString = eventDate + " " + eventStartTime + " 2019";
 
-
                     String eventEndDateTimeString = eventDate + " " + eventEndTime + " 2019";
                     Instant eventStart = dateTimeFormatter.parse(eventStartDateTimeString, Instant::from);
                     Instant eventEnd = dateTimeFormatter.parse(eventEndDateTimeString, Instant::from);
-                    if (spansDays(eventStartTime, eventEndTime))
-                    {
+                    if (spansDays(eventStartTime, eventEndTime)) {
                         //better dates in csv preferred but here it is
                         int secondsInADay = 86400;
                         eventEnd = eventEnd.plusSeconds(secondsInADay);
                     }
-                    Event event = new Event(eventName, eventLocation,eventDay, eventStart, eventEnd);
+                    Event event = new Event(eventName, eventLocation, eventDay, eventStart, eventEnd);
 
                     if (minStartTime == null || event.eventStartTime.isBefore(minStartTime)) {
                         minStartTime = event.eventStartTime;
@@ -77,7 +101,13 @@ public class CSVReader {
             throw new RuntimeException("Error in reading CSV file: ", e);
         } finally {
             try {
-                scheduleInputStream.close();
+                if (scheduleInputStream != null) {
+                    scheduleInputStream.close();
+                }
+                if (fileReader != null) {
+                    fileReader.close();
+                }
+                csvReader.close();
             } catch (IOException e) {
                 throw new RuntimeException("Error while closing input stream: " + e);
             }
@@ -91,12 +121,10 @@ public class CSVReader {
         //hacky way to deal with how the csv provides dates
         Integer startHour = Integer.parseInt(eventStartTime.split(":")[0]);
         Integer endHour = Integer.parseInt(eventEndTime.split(":")[0]);
-        if (startHour!= 24 && endHour == 24)
-        {
+        if (startHour != 24 && endHour == 24) {
             return true;
         }
-        if (startHour != 24 && endHour < startHour)
-        {
+        if (startHour != 24 && endHour < startHour) {
             return true;
         }
         return false;
