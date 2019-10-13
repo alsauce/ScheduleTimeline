@@ -57,9 +57,9 @@ public class ScheduleView extends View {
         paintText.setTextSize(40);
 
         //TODO use now when live, using a test time for now
-        Instant currentTime = Instant.now();
+        Instant currentTime = Instant.ofEpochSecond(Instant.now().getEpochSecond());
         //Instant currentTime = Instant.ofEpochSecond(schedule.minStartTime.getEpochSecond()).plusSeconds(secondsInAnHour +(60*23));
-        double hoursPastCurrentTimeStartTime = getHoursPastStartTime(currentTime);
+        double hoursPastCurrentTimeStartTime = getHoursPastStartTime(currentTime) + .5;
         yHeightPixelForCurrentTime = getPixelForHour(hoursPastCurrentTimeStartTime);
 
 
@@ -192,7 +192,7 @@ public class ScheduleView extends View {
      */
     private double getHoursPastStartTime(Instant time) {
         double secondsPastStart = time.getEpochSecond() - schedule.minStartTime.getEpochSecond() + (secondsInAnHour);
-        double hoursPastStart = secondsPastStart / secondsInAnHour;
+        double hoursPastStart = secondsPastStart / (double)secondsInAnHour;
         Log.i("time getyHeightPixelOffset: ", time.toString());
         Log.i("hoursPastStart getyHeightPixelOffset: ", Double.toString(hoursPastStart));
 
