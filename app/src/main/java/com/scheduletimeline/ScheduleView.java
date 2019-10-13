@@ -57,9 +57,9 @@ public class ScheduleView extends View {
         paintText.setTextSize(40);
 
         //TODO use now when live, using a test time for now
-        Instant currentTime = Instant.ofEpochSecond(Instant.now().getEpochSecond());
+        Instant currentTime = Instant.ofEpochSecond(Instant.now().getEpochSecond() + secondsInAnHour);
         //Instant currentTime = Instant.ofEpochSecond(schedule.minStartTime.getEpochSecond()).plusSeconds(secondsInAnHour +(60*23));
-        double hoursPastCurrentTimeStartTime = getHoursPastStartTime(currentTime) + .5;
+        double hoursPastCurrentTimeStartTime = getHoursPastStartTime(currentTime) - .5;
         yHeightPixelForCurrentTime = getPixelForHour(hoursPastCurrentTimeStartTime);
 
 
@@ -106,8 +106,8 @@ public class ScheduleView extends View {
             for (Event event : locationAndEvents.getValue()) {
                 Log.i("drawing event", event.toString());
                 Instant eventStartTime = event.eventStartTime;
-                double hoursPastStartEventStartTime = getHoursPastStartTime(eventStartTime);
-                double hoursPastStartEventEndTime = getHoursPastStartTime(event.eventEndTime);
+                double hoursPastStartEventStartTime = getHoursPastStartTime(eventStartTime) + .5;
+                double hoursPastStartEventEndTime = getHoursPastStartTime(event.eventEndTime) + .5;
 
 
                 int left = (locationIndex * xBlockWidth) + xSizeForTimeWrittenOnLeft;
