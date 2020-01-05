@@ -10,6 +10,8 @@ import java.io.InputStreamReader;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -58,11 +60,11 @@ public class CSVReader {
                     Event event = new Event(eventName, eventLocation,eventDay, eventStart, eventEnd);
 
                     if (minStartTime == null || event.eventStartTime.isBefore(minStartTime)) {
-                        minStartTime = event.eventStartTime;
+                        minStartTime = event.eventStartTime.truncatedTo(ChronoUnit.HOURS);
                     }
 
                     if (maxEndTime == null || event.eventEndTime.isAfter(maxEndTime)) {
-                        maxEndTime = event.eventEndTime;
+                        maxEndTime = event.eventEndTime.plus(ChronoUnit.HOURS.getDuration()).truncatedTo(ChronoUnit.HOURS);
                     }
                     Log.i("event", event.toString());
                     existingEvents.add(event);
