@@ -45,10 +45,10 @@ public class CSVReader {
                 String eventEndTime = data[5];
                 List<Event> existingEvents = locationToEvents.get(eventLocation);
                 if (existingEvents != null) {
-                    String eventStartDateTimeString = eventDate + " " + eventStartTime + " 2019";
+                    String eventStartDateTimeString = eventDate + " " + eventStartTime + " 2020";
 
 
-                    String eventEndDateTimeString = eventDate + " " + eventEndTime + " 2019";
+                    String eventEndDateTimeString = eventDate + " " + eventEndTime + " 2020";
                     Instant eventStart = dateTimeFormatter.parse(eventStartDateTimeString, Instant::from);
                     Instant eventEnd = dateTimeFormatter.parse(eventEndDateTimeString, Instant::from);
                     if (spansDays(eventStartTime, eventEndTime))

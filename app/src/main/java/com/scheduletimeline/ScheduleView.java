@@ -14,6 +14,7 @@ import android.view.View;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -121,8 +122,10 @@ public class ScheduleView extends View {
                 TextPaint textPaint = new TextPaint();
                 textPaint.setColor(Color.BLACK);
                 textPaint.setTextSize(50);
+                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm").withZone(ZoneId.systemDefault());
+                String timeRange = " " + dateTimeFormatter.format(eventStartTime) + "-" + dateTimeFormatter.format(event.eventEndTime);
                 StaticLayout eventText = StaticLayout.Builder
-                        .obtain(event.eventName, 0, event.eventName.length(), textPaint, xBlockWidth)
+                        .obtain(event.eventName + timeRange, 0, event.eventName.length() + timeRange.length(), textPaint, xBlockWidth)
                         .build();
 
                 //TODO Don't know if translate, then translate back -left, -top is desired approach
