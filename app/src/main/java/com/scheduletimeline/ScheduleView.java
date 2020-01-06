@@ -14,6 +14,7 @@ import android.view.View;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -57,8 +58,8 @@ public class ScheduleView extends View {
         paintText.setTextSize(40);
 
         //TODO use now when live, using a test time for now
-//        Instant currentTime = Instant.now();
-        Instant currentTime = Instant.ofEpochSecond(schedule.minStartTime.getEpochSecond()).plusSeconds(secondsInAnHour +(60*23));
+        Instant currentTime = Instant.now();
+        //Instant currentTime = Instant.ofEpochSecond(schedule.minStartTime.getEpochSecond()).plusSeconds(secondsInAnHour +(60*23));
         double hoursPastCurrentTimeStartTime = getHoursPastStartTime(currentTime);
         yHeightPixelForCurrentTime = getPixelForHour(hoursPastCurrentTimeStartTime);
 
@@ -121,8 +122,10 @@ public class ScheduleView extends View {
                 TextPaint textPaint = new TextPaint();
                 textPaint.setColor(Color.BLACK);
                 textPaint.setTextSize(50);
+                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm").withZone(ZoneId.systemDefault());
+                String timeRange = " " + dateTimeFormatter.format(eventStartTime) + "-" + dateTimeFormatter.format(event.eventEndTime);
                 StaticLayout eventText = StaticLayout.Builder
-                        .obtain(event.eventName, 0, event.eventName.length(), textPaint, xBlockWidth)
+                        .obtain(event.eventName + timeRange, 0, event.eventName.length() + timeRange.length(), textPaint, xBlockWidth)
                         .build();
 
                 //TODO Don't know if translate, then translate back -left, -top is desired approach
