@@ -146,16 +146,27 @@ public class ScheduleView extends View {
         int startHour = schedule.minStartTime.atZone(ZoneId.systemDefault()).getHour();
 
         int currentHour = startHour;
+        int dayNumber = 1;
+        int dateNumber = 7;
         for (int x = 0; x <= numberOfHours + 2; x++) {
             if (currentHour > 24) {
                 currentHour = 1;
+                dayNumber++;
+                dateNumber++;
             }
+            //Paint paintLine = new Paint();
+            //paintLine.setColor(Color.GREEN);
+            canvas.drawRect(0, (x * timeyHeight) + yHeightOffset, size.x, (x * timeyHeight) + yHeightOffset + 5, paintText);
             if (currentHour <= 12) {
                 canvas.drawText(Integer.toString(currentHour) + "am", 0, (x * timeyHeight) + yHeightOffset, paintText);
+                canvas.drawText("Day" + dayNumber, 0, (x * timeyHeight) + yHeightOffset + pmOffset, paintText);
+                canvas.drawText("Jan" + dateNumber, 0, (x * timeyHeight) + yHeightOffset + pmOffset+ pmOffset, paintText);
             }
             if (currentHour > 12) {
                 canvas.drawText(Integer.toString(currentHour), 0, (x * timeyHeight) + yHeightOffset, paintText);
                 canvas.drawText(Integer.toString(currentHour - 12) + "pm", 0, (x * timeyHeight) + yHeightOffset + pmOffset, paintText);
+                canvas.drawText("Day" + dayNumber, 0, (x * timeyHeight)+ yHeightOffset + pmOffset + pmOffset, paintText);
+                canvas.drawText("Jan" + dateNumber, 0, (x * timeyHeight)+ yHeightOffset + pmOffset + pmOffset+ pmOffset, paintText);
             }
 
             currentHour++;
