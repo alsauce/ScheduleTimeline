@@ -154,20 +154,26 @@ public class ScheduleView extends View {
                 dayNumber++;
                 dateNumber++;
             }
-            //Paint paintLine = new Paint();
-            //paintLine.setColor(Color.GREEN);
+
             canvas.drawRect(0, (x * timeyHeight) + yHeightOffset, size.x, (x * timeyHeight) + yHeightOffset + 5, paintText);
-            if (currentHour <= 12) {
-                canvas.drawText(Integer.toString(currentHour) + "am", 0, (x * timeyHeight) + yHeightOffset, paintText);
-                canvas.drawText("Day" + dayNumber, 0, (x * timeyHeight) + yHeightOffset + pmOffset, paintText);
-                canvas.drawText("Jan" + dateNumber, 0, (x * timeyHeight) + yHeightOffset + pmOffset+ pmOffset, paintText);
+
+            if (currentHour == 24)
+            {
+                canvas.drawText(Integer.toString(currentHour - 12) + "am", 0, (x * timeyHeight) + yHeightOffset, paintText);
             }
-            if (currentHour > 12) {
-                canvas.drawText(Integer.toString(currentHour), 0, (x * timeyHeight) + yHeightOffset, paintText);
-                canvas.drawText(Integer.toString(currentHour - 12) + "pm", 0, (x * timeyHeight) + yHeightOffset + pmOffset, paintText);
-                canvas.drawText("Day" + dayNumber, 0, (x * timeyHeight)+ yHeightOffset + pmOffset + pmOffset, paintText);
-                canvas.drawText("Jan" + dateNumber, 0, (x * timeyHeight)+ yHeightOffset + pmOffset + pmOffset+ pmOffset, paintText);
+            else {
+                if (currentHour <= 12) {
+                    canvas.drawText(Integer.toString(currentHour) + "am", 0, (x * timeyHeight) + yHeightOffset, paintText);
+                }
+                if (currentHour > 12) {
+                    canvas.drawText(Integer.toString(currentHour - 12) + "pm", 0, (x * timeyHeight) + yHeightOffset, paintText);
+                }
             }
+
+            //TODO remove these 70k hacks
+            canvas.drawText(Integer.toString(currentHour) + ":00", 0, (x * timeyHeight) + yHeightOffset + pmOffset, paintText);
+            canvas.drawText("Day" + dayNumber, 0, (x * timeyHeight)+ yHeightOffset + pmOffset + pmOffset, paintText);
+            canvas.drawText("Jan" + dateNumber, 0, (x * timeyHeight)+ yHeightOffset + pmOffset + pmOffset+ pmOffset, paintText);
 
             currentHour++;
         }
