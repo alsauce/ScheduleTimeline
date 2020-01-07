@@ -15,6 +15,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +45,7 @@ public class ScheduleView extends View {
 
         // create the Paint and set its color
         paint = new Paint();
-        paint.setColor(Color.GRAY);
+        paint.setColor(Color.WHITE);
 
         xBlockWidth = (size.x - xSizeForTimeWrittenOnLeft) / schedule.locationToEvents.size();
 
@@ -83,7 +85,7 @@ public class ScheduleView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawColor(Color.BLUE);
+        canvas.drawColor(Color.BLACK);
 
         drawTime(canvas);
         drawCurrentTime(canvas);
@@ -96,7 +98,7 @@ public class ScheduleView extends View {
 
         Paint paintLine = new Paint();
         paintLine.setColor(Color.GREEN);
-        canvas.drawRect(0, yHeightPixelForCurrentTime, size.x, yHeightPixelForCurrentTime + 5, paintLine);
+        canvas.drawRect(0, yHeightPixelForCurrentTime, size.x, yHeightPixelForCurrentTime + 10, paintLine);
 
     }
 
@@ -145,6 +147,8 @@ public class ScheduleView extends View {
 
         int startHour = schedule.minStartTime.atZone(ZoneId.systemDefault()).getHour();
 
+        Paint paintLine = new Paint();
+        paintLine.setColor(Color.BLUE);
         int currentHour = startHour;
         int dayNumber = 1;
         int dateNumber = 7;
@@ -155,7 +159,7 @@ public class ScheduleView extends View {
                 dateNumber++;
             }
 
-            canvas.drawRect(0, (x * timeyHeight) + yHeightOffset, size.x, (x * timeyHeight) + yHeightOffset + 5, paintText);
+            canvas.drawRect(0, (x * timeyHeight) + yHeightOffset, size.x, (x * timeyHeight) + yHeightOffset + 5, paintLine);
 
             if (currentHour == 24)
             {
