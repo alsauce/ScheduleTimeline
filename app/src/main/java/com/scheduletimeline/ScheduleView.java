@@ -155,8 +155,12 @@ public class ScheduleView extends View {
         for (int x = 0; x <= numberOfHours + 2; x++) {
             if (currentHour > 24) {
                 currentHour = 1;
-                dayNumber++;
                 dateNumber++;
+            }
+
+            if (currentHour == 6)
+            {
+                dayNumber++;
             }
 
             canvas.drawRect(0, (x * timeyHeight) + yHeightOffset, size.x, (x * timeyHeight) + yHeightOffset + 5, paintLine);
